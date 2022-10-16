@@ -22,8 +22,9 @@ trait RunsParallelTasks
         })->values()->toArray();
 
         $closures = $closures->values()->map(function ($closure, $index) {
-            return function() use ($index, $closure) {
+            return function () use ($index, $closure) {
                 $result = $closure();
+
                 return [
                     'task_id' => $index,
                     'result' => $result,
@@ -36,7 +37,7 @@ trait RunsParallelTasks
         Fork::new()
             ->after(
                 parent: function ($output) use (&$tasks, $section) {
-                    $tasks[$output['task_id']]['ran_successful'] = (bool)$output['result'];
+                    $tasks[$output['task_id']]['ran_successful'] = (bool) $output['result'];
                     $this->render($tasks, $section);
                 }
             )
